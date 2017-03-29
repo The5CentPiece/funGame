@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<p id="id"></p>
+<html type="button" oncontextmenu="rclick()" onclick="lclick()">
+</html>
+<script>
+document.addEventListener("contextmenu", function(e){
+    e.preventDefault();
+}, false);
+
+function lclick(){
+	document.getElementById("id").innerHTML = ["nop"];
+}
+function rclick(){
+	document.getElementById("id").innerHTML = ["yop"];
+}
+
+</script>
+</html>
