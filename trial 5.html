@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html>
+<style>
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+</style>
 <body onload="movement()">
-<img src="tumblr_mwsqkjwet81r8sc3ro2_250.gif" style="width:100px;height:100px;" draggable="false" id="plyr">
+<img src="tumblr_mwsqkjwet81r8sc3ro2_250.gif" style="width:100px;height:100px;" draggable="false" class="noselect" id="plyr">
 <html type="button" onkeydown="down(event)" onkeyup="up(event)">
 </html>
 
