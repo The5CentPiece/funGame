@@ -39,16 +39,16 @@ function down(event) {
   }
 }
 function up(event) {
-  if (event.keyCode==87) {
+  if ((event.keyCode==87)||(event.which==87)) {
     keys[0] = 0;
   }
-  if (event.keyCode==65) {
+  if ((event.keyCode==65)||(event.which==65)) {
     keys[1] = 0;
   }
-  if (event.keyCode==83) {
+  if ((event.keyCode==83)||(event.which==83)) {
     keys[2] = 0;
   }
-  if (event.keyCode==68) {
+  if ((event.keyCode==68)||(event.which==68)) {
     keys[3] = 0;
   }
 }
