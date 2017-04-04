@@ -12,8 +12,16 @@
 body {
   cursor: url('sight.png') 16 16, default;
 }
-body:active {
-  cursor: url('sightOnClick.gif') 16 16, default;
+#container {
+   cursor   : none;
+}
+
+#cursor {
+  position  : absolute;
+  z-index   : 10000;
+  width     : 16px;
+  height    : 16px;
+  background: url("signtOnClick.png") 16 16 no-repeat;
 }
 </style>
 <body onload="movement()">
@@ -96,9 +104,21 @@ function movement(){ setInterval (function(){
 document.addEventListener("contextmenu", function(e){
     e.preventDefault();
 }, false);
+var cursorOffset = {
+   left : -16
+ , top  : -16
+}
+document.getElementById('container').addEventListener("mousemove", function (e) {
+  var $cursor = document.getElementById('cursor')
+
+  $cursor.style.left = (e.pageX - cursorOffset.left) + 'px';
+  $cursor.style.top = (e.pageY - cursorOffset.top) + 'px';
+
+}, false);
 function randomNumber(min, max) {
   return Math.floor(Math.random()*(max-min+1))+min;
 }
+
 </script>
 </body>
 </html>
