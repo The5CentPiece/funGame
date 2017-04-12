@@ -18,7 +18,7 @@ body:active {
 </style>
 <body onload="movement()">
 <img src="testback.jpg" style="top:0px;left:0px;" draggable="false" class="noselect" id="background">
-<img src="walkingRight.gif" style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
+<img src='walkingRight.gif' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
 <html type="button" onkeydown="down(event)" onkeyup="up(event)">
 </html>
 <script>
@@ -29,6 +29,7 @@ var plyr = document.getElementById('plyr');
 var back = document.getElementById('background');
 var w;
 var h;
+var img;
 function down(event) {
   if ((event.keyCode==87)||(event.which==87)) {
     keys[0] = 1;
@@ -63,12 +64,20 @@ function movement(){ setInterval (function(){
   }
   if (keys[1]==1) {
     x--;
+    if (img!="l") {
+      plyr.src='walkingLeft.gif';
+      img="l";
+    }
   }
   if (keys[2]==1) {
     y++;
   }
   if (keys[3]==1) {
     x++;
+    if (img!="r") {
+      plyr.src='walkingRight.gif';
+      img="r";
+    }
   }
   var winw = window.innerWidth
 || document.documentElement.clientWidth
