@@ -18,7 +18,7 @@ body:active {
 </style>
 <body onload="movement()">
 <img src="testback.jpg" style="top:0px;left:0px;" draggable="false" class="noselect" id="background">
-<img src='walkingRight.gif' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
+<img src='cannonBallKid.png' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
 <html type="button" onkeydown="down(event)" onkeyup="up(event)">
 </html>
 <script>
@@ -59,9 +59,6 @@ function up(event) {
   }
 }
 function movement(){ setInterval (function(){
-  if (keys[0]==1) {
-    y--;
-  }
   if (keys[1]==1) {
     x--;
     if (img!="l") {
@@ -69,15 +66,38 @@ function movement(){ setInterval (function(){
       img="l";
     }
   }
-  if (keys[2]==1) {
-    y++;
-  }
   if (keys[3]==1) {
     x++;
     if (img!="r") {
       plyr.src='walkingRight.gif';
       img="r";
     }
+  }
+  if (keys[0]==1) {
+    y--;
+    if ((img!="a")&&(keys[1]!=1)&&(keys[3]!=1)) {
+      plyr.src="FF0000.png";
+      img="a";
+    }
+  }
+  if (keys[2]==1) {
+    y++;
+    if ((img!="t")&&(keys[1]!=1)&&(keys[3]!=1)) {
+      plyr.src="blue.png";
+      img="t";
+    }
+  }
+  if ((keys[0]===0)&&(keys[1]==1)&&(keys[2]==1)&&(keys[3]==1)) {
+    plyr.src='blue.png';
+    img="t"
+  }
+  if ((keys[0]==1)&&(keys[1]==1)&&(keys[2]===0)&&(keys[3]==1)) {
+    plyr.src='FF0000.png';
+    img="a"
+  }
+  if (((keys[0]===0)&&(keys[1]===0)&&(keys[2]===0)&&(keys[3]===0))||((keys[0]==1)&&(keys[1]==1)&&(keys[2]==1)&&(keys[3]==1))||((keys[0]===0)&&(keys[1]==1)&&(keys[2]===0)&&(keys[3]==1))||((keys[0]==1)&&(keys[1]===0)&&(keys[2]==1)&&(keys[3]===0))) {
+    plyr.src='cannonBallKid.png';
+    img="s"
   }
   var winw = window.innerWidth
 || document.documentElement.clientWidth
