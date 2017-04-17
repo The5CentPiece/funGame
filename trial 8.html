@@ -112,6 +112,18 @@ function movement(){ setInterval (function(){
     w=winw;
     h=winw*(9/16);
   }
+  if (x<=0) {
+    x++;
+  }
+  if (x+160>=1920) {
+    x--;
+  }
+  if (y<=0) {
+    y++;
+  }
+  if (y+160>=1080) {
+    y--;
+  }
   plyr.style.position = "absolute";
   plyr.style.width = 160*(w/1920)+'px';
   plyr.style.height = 160*(h/1080)+'px';
