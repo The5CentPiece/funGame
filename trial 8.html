@@ -59,14 +59,14 @@ function up(event) {
   }
 }
 function movement(){ setInterval (function(){
-  if (keys[1]==1) {
+  if ((keys[1]==1)&&(keys[3]!=1)) {
     x--;
     if (img!="l") {
       plyr.src='walkingLeft.gif';
       img="l";
     }
   }
-  if (keys[3]==1) {
+  if ((keys[3]==1)&&(keys[1]!=1)) {
     x++;
     if (img!="r") {
       plyr.src='walkingRight.gif';
@@ -75,25 +75,17 @@ function movement(){ setInterval (function(){
   }
   if (keys[0]==1) {
     y--;
-    if ((img!="a")&&(keys[1]!=1)&&(keys[3]!=1)) {
-      plyr.src="FF0000.png";
+    if (((img!="a")&&(keys[1]!=1)&&(keys[3]!=1))||((keys[0]==1)&&(keys[1]==1)&&(keys[2]===0)&&(keys[3]==1)&&(img!="a"))) {
+      plyr.src="walkingAway.gif";
       img="a";
     }
   }
   if (keys[2]==1) {
     y++;
-    if ((img!="t")&&(keys[1]!=1)&&(keys[3]!=1)) {
+    if (((img!="t")&&(keys[1]!=1)&&(keys[3]!=1))||((keys[0]===0)&&(keys[1]==1)&&(keys[2]==1)&&(keys[3]==1)&&(img!="t"))) {
       plyr.src="walkingToward.gif";
       img="t";
     }
-  }
-  if ((keys[0]===0)&&(keys[1]==1)&&(keys[2]==1)&&(keys[3]==1)) {
-    plyr.src='blue.png';
-    img="t"
-  }
-  if ((keys[0]==1)&&(keys[1]==1)&&(keys[2]===0)&&(keys[3]==1)) {
-    plyr.src='FF0000.png';
-    img="a"
   }
   if (((keys[0]===0)&&(keys[1]===0)&&(keys[2]===0)&&(keys[3]===0))||((keys[0]==1)&&(keys[1]==1)&&(keys[2]==1)&&(keys[3]==1))||((keys[0]===0)&&(keys[1]==1)&&(keys[2]===0)&&(keys[3]==1))||((keys[0]==1)&&(keys[1]===0)&&(keys[2]==1)&&(keys[3]===0))) {
     plyr.src='cannonBallKid.png';
