@@ -32,15 +32,47 @@ var h;
 var img;
 var room=1;
 var running=1;
-var invincible=0;
+var jumping=0;
+var hop = 0;
+var cooldown = 0;
 function rclick(event) {
-  if (running==1){
-    x=(((event.clientX*1920)/w)-80);
-    y=(((event.clientY*1080)/h)-80);
+  if ((running==1)&&(cooldown==0)){
+    cooldown=4;
+    jumping=1;
+    y=y+80;
+    hop=1;
+    var jumpInt = setInterval(function(){
+      if (y<=-200) {
+        hop=0;
+      }
+      if (hop==1) {
+        plyr.src='jumpingBall.png';
+        y=y-15;
+      }
+      if ((hop==0)&&(y<(((event.clientY*1080)/h)-80))) {
+        x=(((event.clientX*1920)/w)-80);
+        y=y+20;
+        plyr.src='cannonBallKid.png';
+      }
+      if ((hop==0)&&(y>=(((event.clientY*1080)/h)-80))) {
+        clearInterval(jumpInt);
+        jumping=0;
+        keys[0]=0;
+        keys[1]=0;
+        keys[2]=0;
+        keys[3]=0;
+      }
+    }, 3);
+    var cooldownInt = setInterval(function(){
+      cooldown--;
+      if (cooldown==0) {
+        clearInterval(cooldownInt);
+      }
+    }, 1000);
   }
 }
 function down(event) {
-  if (running==1) {
+  if ((running==1)&&(jumping==0)) {
     if ((event.keyCode==87)||(event.which==87)) {
       keys[0] = 1;
     }
@@ -56,7 +88,7 @@ function down(event) {
   }
 }
 function up(event) {
-  if (running==1) {
+  if ((running==1)&&(jumping==0)) {
     if ((event.keyCode==87)||(event.which==87)) {
       keys[0] = 0;
     }
@@ -107,17 +139,19 @@ function movement() {
       img="s"
     }
     //BORDER
-    if (x<=34) {
-      x=x+1.5;
-    }
-    if (x+160>=1888) {
-      x=x-1.5;
-    }
-    if (y<=-10) {
-      y=y+1.5;
-    }
-    if (y+160>=1032) {
-      y=y-1.5;
+    if (jumping==0) {
+      if (x<=34) {
+        x=x+1.5;
+      }
+      if (x+160>=1888) {
+        x=x-1.5;
+      }
+      if (y<=-10) {
+        y=y+1.5;
+      }
+      if (y+160>=1032) {
+        y=y-1.5;
+      }
     }
   }
   //end of if running
