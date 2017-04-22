@@ -19,6 +19,7 @@ body:active {
 <body onload="movement()" style="background-color:black;" oncontextmenu="rclick(event)">
 <img src="testback.png" style="top:0px;left:0px;" draggable="false" class="noselect" id="background">
 <img src='cannonBallKid.png' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
+<img src="stamina0.png" draggable="false" class="noselect" id="stamina">
 <html type="button" onkeydown="down(event)" onkeyup="up(event)">
 </html>
 <script>
@@ -26,6 +27,7 @@ var x = 0;
 var y = 0;
 var keys = [0,0,0,0];
 var plyr = document.getElementById('plyr');
+var stamina = document.getElementById('stamina');
 var back = document.getElementById('background');
 var w;
 var h;
@@ -38,6 +40,7 @@ var cooldown = 0;
 function rclick(event) {
   if ((running==1)&&(cooldown==0)){
     cooldown=4;
+    stamina.src='stamina4.png';
     jumping=1;
     y=y+80;
     hop=1;
@@ -65,6 +68,7 @@ function rclick(event) {
     }, 3);
     var cooldownInt = setInterval(function(){
       cooldown--;
+        stamina.src='stamina'+cooldown+'.png';
       if (cooldown==0) {
         clearInterval(cooldownInt);
       }
@@ -176,6 +180,11 @@ function movement() {
     back.style.position = "absolute";
     back.style.width = w+'px';
     back.style.height = h+'px';
+    stamina.style.position = "absolute";
+    stamina.style.left = (.4166666666666667*w)+'px';
+    stamina.style.top = -50*(h/1920)+'px';
+    stamina.style.width = 320*(w/1920)+'px';
+    stamina.style.height = 160*(h/1080)+'px';
   }, 3);
 }
 document.addEventListener("contextmenu", function(e){
