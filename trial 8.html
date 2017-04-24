@@ -16,7 +16,7 @@ body:active {
   cursor: url('sightOnClick.png') 16 16, default;
 }
 </style>
-<body onload="movement()" style="background-color:black;" oncontextmenu="rclick(event)">
+<body onload="movement(event)" style="background-color:black;" oncontextmenu="rclick(event)">
 <img src="testback.png" style="top:0px;left:0px;" draggable="false" class="noselect" id="background">
 <img src='cannonBallKid.png' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
 <img src="stamina0.png" draggable="false" class="noselect" id="stamina">
@@ -37,42 +37,55 @@ var running=1;
 var jumping=0;
 var hop = 0;
 var cooldown = 0;
+var obstructed = 0;
 function rclick(event) {
-  if ((running==1)&&(cooldown==0)){
-    cooldown=4;
-    stamina.src='stamina4.png';
-    jumping=1;
-    y=y+80;
-    hop=1;
-    var jumpInt = setInterval(function(){
-      if (y<=-200) {
-        hop=0;
-      }
-      if (hop==1) {
-        plyr.src='jumpingBall.png';
-        y=y-15;
-      }
-      if ((hop==0)&&(y<(((event.clientY*1080)/h)-80))) {
-        x=(((event.clientX*1920)/w)-80);
-        y=y+20;
-        plyr.src='cannonBallKid.png';
-      }
-      if ((hop==0)&&(y>=(((event.clientY*1080)/h)-80))) {
-        clearInterval(jumpInt);
-        jumping=0;
-        keys[0]=0;
-        keys[1]=0;
-        keys[2]=0;
-        keys[3]=0;
-      }
-    }, 3);
-    var cooldownInt = setInterval(function(){
-      cooldown--;
-        stamina.src='stamina'+cooldown+'.png';
-      if (cooldown==0) {
-        clearInterval(cooldownInt);
-      }
-    }, 1000);
+  if (((((event.clientX*1920)/w)-80)>34)&&((((event.clientX*1920)/w)+80)<1888)&&((((event.clientY*1080)/h)-80)>10)&&((((event.clientY*1080)/h)+80)<1010)) {
+    obstructed=0;
+  } else {
+    obstructed=1;
+  }
+  if (room==1) {
+    if ((((((event.clientX*1920)/w)-80)<560)&&((((event.clientY*1080)/h)-80)<130)&&((((event.clientX*1920)/w)+80)>270))||(((((event.clientX*1920)/w)-80)<1190)&&((((event.clientY*1080)/h)-80)<130)&&((((event.clientX*1920)/w)+80)>900))||(((((event.clientX*1920)/w)-80)<1820)&&((((event.clientY*1080)/h)-80)<130)&&((((event.clientX*1920)/w)+80)>1530))) {
+      obstructed=1;
+    }
+  }
+  if (obstructed==0) {
+    if ((running==1)&&(cooldown==0)){
+      cooldown=4;
+      stamina.src='stamina4.png';
+      jumping=1;
+      y=y+80;
+      hop=1;
+      var jumpInt = setInterval(function(){
+        if (y<=-200) {
+          hop=0;
+        }
+        if (hop==1) {
+          plyr.src='jumpingBall.png';
+          y=y-15;
+        }
+        if ((hop==0)&&(y<(((event.clientY*1080)/h)-80))) {
+          x=(((event.clientX*1920)/w)-80);
+          y=y+20;
+          plyr.src='cannonBallKid.png';
+        }
+        if ((hop==0)&&(y>=(((event.clientY*1080)/h)-80))) {
+          clearInterval(jumpInt);
+          jumping=0;
+          keys[0]=0;
+          keys[1]=0;
+          keys[2]=0;
+          keys[3]=0;
+        }
+      }, 3);
+      var cooldownInt = setInterval(function(){
+        cooldown--;
+          stamina.src='stamina'+cooldown+'.png';
+        if (cooldown==0) {
+          clearInterval(cooldownInt);
+        }
+      }, 1000);
+    }
   }
 }
 function down(event) {
@@ -107,7 +120,7 @@ function up(event) {
     }
   }
 }
-function movement() {
+function movement(event) {
   setInterval (function(){
   if (running==1) {
     if ((keys[1]==1)&&(keys[3]!=1)) {
@@ -153,7 +166,7 @@ function movement() {
       if (y<=-10) {
         y=y+1.5;
       }
-      if (y+160>=1032) {
+      if (y+160>=1030) {
         y=y-1.5;
       }
       if (room == 1) {
