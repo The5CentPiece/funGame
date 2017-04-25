@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html>
-<body onload="pirate()">
+<style>
+.noselect {
+  -webkit-touch-callout: none;
+    -webkit-user-select: none;
+     -khtml-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+}
+</style>
+<body onload="pirateSpawn()" draggable="false" class="noselect">
 <script>
 var pirates = [];
-function pirate() {
-  for (pirateCount = 0; pirateCount < 1; pirateCount++) {
-    document.createElement("img id=");
-    pirates[pirateCount] = document.getElementById
-    pirates[pirateCount].src="pirate.png";
+function pirateSpawn() {
+  for (count = 0; count < 1; count++) {
+    pirates[count] = document.createElement("IMG");
+    pirates[count].setAttribute("src", "pirate.png");
+    pirates[count].setAttribute("id", "pirate"+count);
+    pirates[count].setAttribute("draggable", "false");
+    pirates[count].setAttribute("class", "noselect");
+    document.body.appendChild(pirates[count]);
   }
 }
 function randomNumber(min, max) {
@@ -16,4 +29,3 @@ function randomNumber(min, max) {
 </script>
 </body>
 </html>
-https://www.w3schools.com/jsref/tryit.asp?filename=tryjsref_img_create

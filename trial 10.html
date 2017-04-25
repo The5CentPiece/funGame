@@ -38,6 +38,8 @@ var jumping=0;
 var hop = 0;
 var cooldown = 0;
 var obstructed = 0;
+var pirates = [];
+var pirateCount;
 function rclick(event) {
   if (((((event.clientX*1920)/w)-80)>34)&&((((event.clientX*1920)/w)+80)<1888)&&((((event.clientY*1080)/h)-80)>10)&&((((event.clientY*1080)/h)+80)<1010)) {
     obstructed=0;
@@ -210,6 +212,17 @@ function movement(event) {
     stamina.style.width = 320*(w/1920)+'px';
     stamina.style.height = 160*(h/1080)+'px';
   }, 3);
+}
+function pirateSpawn() {
+  pirateCount = randomNumber(3,7)
+  for (count = 0; count < pirateCount; count++) {
+    pirates[count] = document.createElement("IMG");
+    pirates[count].setAttribute("src", "pirate.png");
+    pirates[count].setAttribute("id", "pirate"+count);
+    pirates[count].setAttribute("draggable", "false");
+    pirates[count].setAttribute("class", "noselect");
+    document.body.appendChild(pirates[count]);
+  }
 }
 document.addEventListener("contextmenu", function(e){
     e.preventDefault();
