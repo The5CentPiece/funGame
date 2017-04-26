@@ -16,9 +16,9 @@ body:active {
   cursor: url('sightOnClick.png') 16 16, default;
 }
 </style>
-<body onload="movement(event)" style="background-color:black;" class="noselect" draggable="false" oncontextmenu="rclick(event)">
+<body onload="movement(event)" style="background-color:black;" class="noselect" draggable="false" oncontextmenu="rclick(event)" id="bod">
 <img src="testback.png" style="top:0px;left:0px;" draggable="false" class="noselect" id="background">
-<img src='cannonBallKid.png' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
+<img src='cannonBallKid.png' onclick="pirateSpawn()" style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
 <img src="stamina0.png" draggable="false" class="noselect" id="stamina">
 <html type="button" onkeydown="down(event)" onkeyup="up(event)">
 </html>
@@ -35,11 +35,17 @@ var img;
 var room=1;
 var running=1;
 var jumping=0;
+var invincible=0;
 var hop = 0;
 var cooldown = 0;
 var obstructed = 0;
 var pirates = [];
 var pirateCount;
+var piratesX = [];
+var piratesY = [];
+var piratesOldX;
+var piratesOldY;
+var piratesRoom = 0;
 function rclick(event) {
   if (((((event.clientX*1920)/w)-80)>34)&&((((event.clientX*1920)/w)+80)<1888)&&((((event.clientY*1080)/h)-80)>10)&&((((event.clientY*1080)/h)+80)<1010)) {
     obstructed=0;
@@ -56,6 +62,7 @@ function rclick(event) {
       cooldown=4;
       stamina.src='stamina4.png';
       jumping=1;
+      invincible=1;
       y=y+80;
       hop=1;
       var jumpInt = setInterval(function(){
@@ -74,6 +81,7 @@ function rclick(event) {
         if ((hop==0)&&(y>=(((event.clientY*1080)/h)-80))) {
           clearInterval(jumpInt);
           jumping=0;
+          invincible=0;
           keys[0]=0;
           keys[1]=0;
           keys[2]=0;
@@ -185,6 +193,7 @@ function movement(event) {
     }
   }
   //end of if running
+  //scaling
     var winw = window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
@@ -211,18 +220,87 @@ function movement(event) {
     stamina.style.top = -25*(h/1920)+'px';
     stamina.style.width = 320*(w/1920)+'px';
     stamina.style.height = 160*(h/1080)+'px';
+    if (piratesRoom==1) {
+      for (i = 0; i < pirateCount; i++) {
+        if (running == 1) {
+          piratesOldX=piratesX[i];
+          piratesOldY=piratesY[i];
+          if ((piratesY[i]<y)&&(piratesX[i]<x)) {
+            piratesY[i]=piratesY[i]+(2*(y-piratesY[i])/((x-piratesX[i])+(y-piratesY[i])));
+            piratesX[i]=piratesX[i]+(2*(x-piratesX[i])/((x-piratesX[i])+(y-piratesY[i])));
+          }
+           if ((piratesY[i]<y)&&(piratesX[i]>=x)) {
+            piratesY[i]=piratesY[i]+(2*(y-piratesY[i])/((y-piratesY[i])-(x-piratesX[i])));
+            piratesX[i]=piratesX[i]-(2*(x-piratesX[i])/((x-piratesX[i])-(y-piratesY[i])));
+          }
+          if ((piratesY[i]>=y)&&(piratesX[i]>=x)) {
+            piratesY[i]=piratesY[i]-(2*(y-piratesY[i])/((x-piratesX[i])+(y-piratesY[i])));
+            piratesX[i]=piratesX[i]-(2*(x-piratesX[i])/((x-piratesX[i])+(y-piratesY[i])));
+          }
+          if ((piratesY[i]>=y)&&(piratesX[i]<x)) {
+            piratesY[i]=piratesY[i]-(2*(y-piratesY[i])/((y-piratesY[i])-(x-piratesX[i])));
+            piratesX[i]=piratesX[i]+(2*(x-piratesX[i])/((x-piratesX[i])-(y-piratesY[i])));
+          }
+          for (j = 0; j < pirateCount; j++) {
+            if (i!=j) {
+              if ((piratesX[i]>(piratesX[j]-50))&&(piratesX[i]<(piratesX[j]+50))&&(piratesY[i]>(piratesY[j]-10))&&(piratesY[i]<(piratesY[j]+10))) {
+                if (randomNumber(0,1)>.5) {
+                  piratesX[i]=(2*piratesOldX)-piratesX[i];
+                }
+              }
+            }
+          }
+          if ((piratesX[i]<=34)||(piratesX[i]+160>=1888)) {
+            piratesX[i]=piratesOldX;
+          }
+          if ((piratesY[i]<=0)||(piratesY[i]+160>=1030)) {
+            piratesY[i]=piratesOldY;
+          }
+          if (((piratesX[i]+160>=270)&&(piratesX[i]+160<=275)&&(piratesY[i]<=110))||((piratesX[i]+160>=900)&&(piratesX[i]+160<=905)&&(piratesY[i]<=110))||((piratesX[i]+160>=1530)&&(piratesX[i]+160<=1535)&&(piratesY[i]<=110))) {
+            piratesX[i]=piratesOldX;
+          }
+          if (((piratesX[i]>=555)&&(piratesX[i]<=560)&&(piratesY[i]<=110))||((piratesX[i]>=1185)&&(piratesX[i]<=1190)&&(piratesY[i]<=110))) {
+            piratesX[i]=piratesOldX+2;
+            piratesY[i]=piratesOldY+2;
+          }
+          if (((piratesX[i]+160>=270)&&(piratesX[i]<=560)&&(piratesY[i]<=110)&&(piratesY[i]>=105))||((piratesX[i]+160>=900)&&(piratesX[i]<=1190)&&(piratesY[i]<=110)&&(piratesY[i]>=105))||((piratesX[i]+160>=1530)&&(piratesX[i]<=1820)&&(piratesY[i]<=110)&&(piratesY[i]>=105))) {
+            piratesY[i]=piratesOldY+2;
+          }
+        }
+        pirates[i].style.position = "absolute";
+        pirates[i].style.width = 160*(w/1920)+'px';
+        pirates[i].style.height = 160*(h/1080)+'px';
+        pirates[i].style.left = piratesX[i]*(w/1920)+'px';
+        pirates[i].style.top = piratesY[i]*(h/1080)+'px';
+        if (y<piratesY[i]) {
+          insertAfter(pirates[i], plyr);
+        } else {
+          document.getElementById("bod").insertBefore(pirates[i], plyr);
+        }
+      }
+    }
+
   }, 3);
 }
 function pirateSpawn() {
-  pirateCount = randomNumber(3,7)
-  for (count = 0; count < pirateCount; count++) {
-    pirates[count] = document.createElement("IMG");
-    pirates[count].setAttribute("src", "pirate.png");
-    pirates[count].setAttribute("id", "pirate"+count);
-    pirates[count].setAttribute("draggable", "false");
-    pirates[count].setAttribute("class", "noselect");
-    document.body.appendChild(pirates[count]);
+  pirateCount=randomNumber(3, 7);
+  for (i = 0; i < pirateCount; i++) {
+    pirates[i] = document.createElement("IMG");
+    pirates[i].setAttribute("src", "pirate.png");
+    pirates[i].setAttribute("id", "pirate"+i);
+    pirates[i].setAttribute("draggable", "false");
+    pirates[i].setAttribute("class", "noselect");
+    document.body.appendChild(pirates[i]);
+    piratesX[i]=randomNumber(34,1728);
+    piratesY[i]=randomNumber(110,870);
+    pirates[i].style.position="absolute";
+    pirates[i].style.left = piratesX[i]*(w/1920)+"px";
+    pirates[i].style.top = piratesY[i]*(h/1920)+"px";
+    piratesRoom=1;
   }
+}
+function insertAfter(newNode, referenceNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 document.addEventListener("contextmenu", function(e){
     e.preventDefault();

@@ -1,0 +1,37 @@
+if (piratesRoom == 1) {
+  for (i = 0; i < pirateCount; i++) {
+    piratesOldpiratesX[i]=piratespiratesX[i][i];
+    piratesOldpiratesY[i]=piratespiratesY[i][i];
+    if (((piratespiratesX[i][i]-piratesX[i])>=0)&&((piratespiratesY[i][i]-piratesY[i])<0)) {
+        piratesAngle = 6.28318530718-Math.abs(Math.atan(((piratespiratesY[i][i]-piratesY[i]))/(pirates-piratesX[i]))));
+    }
+    if (((piratespiratesX[i][i]-piratesX[i])<0)&&((piratespiratesY[i][i]-piratesY[i])<0)) {
+        piratesAngle = 3.14159265359+Math.abs(Math.atan(((piratespiratesY[i][i]-piratesY[i]))/((piratespiratesX[i][i]-piratesX[i]))));
+    }
+    if (((piratespiratesX[i][i]-piratesX[i])<0)&&((piratespiratesY[i][i]-piratesY[i])>=0)) {
+        piratesAngle = 3.14159265359-Math.abs(Math.atan(((piratespiratesY[i][i]-piratesY[i]))/((piratespiratesX[i][i]-piratesX[i]))));
+    }
+    if (((piratespiratesX[i][i]-piratesX[i])>=0)&&((piratespiratesY[i][i]-piratesY[i])>=0)) {
+        piratesAngle = Math.abs(Math.atan(((piratespiratesY[i][i]-piratesY[i]))/((piratespiratesX[i][i]-piratesX[i]))));
+    }
+    piratespiratesX[i][i]=(2.5*(Math.cos(piratesAngle)));
+    piratespiratesY[i][i]=(2.5*(Math.sin(piratesAngle)));
+    if ((piratespiratesX[i][i]<=34)||(piratespiratesX[i][i]+160>=1888)) {
+      piratespiratesX[i][i]=piratesOldpiratesX[i];
+    }
+    if ((piratespiratesY[i][i]<=0)||(piratespiratesY[i][i]>=1030)) {
+      piratespiratesY[i][i]=piratesOldpiratesY[i];
+    }
+  }
+}
+
+
+
+if (((piratesX[i]+160>=270)&&(piratesX[i]+160<=275)&&(piratesY[i]<=110))||((piratesX[i]+160>=900)&&(piratesX[i]+160<=905)&&(piratesY[i]<=110))||((piratesX[i]+160>=1530)&&(piratesX[i]+160<=1535)&&(piratesY[i]<=110))) {
+  piratesX[i]=piratesOldX;
+}
+if (((piratesX[i]>=555)&&(piratesX[i]<=560)&&(piratesY[i]<=110))||((piratesX[i]>=1185)&&(piratesX[i]<=1190)&&(piratesY[i]<=110))) {
+  piratesX[i]=piratesOldX;
+}
+if (((piratesX[i]+160>=270)&&(piratesX[i]<=560)&&(piratesY[i]<=110)&&(piratesY[i]>=105))||((piratesX[i]+160>=900)&&(piratesX[i]<=1190)&&(piratesY[i]<=110)&&(piratesY[i]>=105))||((piratesX[i]+160>=1530)&&(piratesX[i]<=1820)&&(piratesY[i]<=110)&&(piratesY[i]>=105))) {
+  piratesY[i]=piratesOldY;

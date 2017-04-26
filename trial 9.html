@@ -14,13 +14,15 @@
 <script>
 var pirates = [];
 function pirateSpawn() {
-  for (count = 0; count < 1; count++) {
+  for (count = 0; count < 5; count++) {
     pirates[count] = document.createElement("IMG");
     pirates[count].setAttribute("src", "pirate.png");
     pirates[count].setAttribute("id", "pirate"+count);
     pirates[count].setAttribute("draggable", "false");
     pirates[count].setAttribute("class", "noselect");
     document.body.appendChild(pirates[count]);
+    pirates[count].style.position="absolute";
+    pirates[count].style.left = randomNumber(0,500)+"px";
   }
 }
 function randomNumber(min, max) {
