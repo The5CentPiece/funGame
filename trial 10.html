@@ -18,22 +18,30 @@ body:active {
 </style>
 <body onload="movement(event)" style="background-color:black;" class="noselect" draggable="false" oncontextmenu="rclick(event)" id="body1">
 <img src="testback.png" style="top:0px;left:0px;" draggable="false" class="noselect" id="background">
-<img src='cannonBallKid.png' onclick="pirateSpawn()" style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
+<img src='cannonBallKid.png' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
 <img src="stamina0.png" draggable="false" class="noselect" id="stamina">
+<img src="pirateShip.png" style="top:0px;left:0px;" draggable="false" class="noselect" id="startScreen">
+<img src="start.png" onclick="startGame()" draggable="false" class="noselect" id="startButton">
+<img src="cannonBallKid.png" style="width:160px;height:160px;display:none;" draggable="false" class="noselect" id="kiddo">
 <html type="button" onkeydown="down(event)" onkeyup="up(event)">
 </html>
 <script>
 var x = 0;
 var y = 0;
+var kiddoX = 960;
+var kiddoY = 540;
 var keys = [0,0,0,0];
 var plyr = document.getElementById('plyr');
 var stamina = document.getElementById('stamina');
 var back = document.getElementById('background');
+var startScreen = document.getElementById('startScreen');
+var kiddo = document.getElementById('kiddo');
+var startButton = document.getElementById('startButton');
 var w;
 var h;
 var img;
 var room=1;
-var running=1;
+var running=0;
 var jumping=0;
 var invincible=0;
 var hop = 0;
@@ -46,7 +54,7 @@ var piratesY = [];
 var piratesOldX;
 var piratesOldY;
 var piratesRoom = 0;
-var score = 1;
+var score = [1];
 function rclick(event) {
   if (((((event.clientX*1920)/w)-80)>34)&&((((event.clientX*1920)/w)+80)<1888)&&((((event.clientY*1080)/h)-80)>10)&&((((event.clientY*1080)/h)+80)<1010)) {
     obstructed=0;
@@ -221,6 +229,14 @@ function movement(event) {
     stamina.style.top = -25*(h/1920)+'px';
     stamina.style.width = 320*(w/1920)+'px';
     stamina.style.height = 160*(h/1080)+'px';
+    startScreen.style.position = "absolute";
+    startScreen.style.width = w+'px';
+    startScreen.style.height = h+'px';
+    startButton.style.position = "absolute";
+    startButton.style.left = 800*(w/1920)+'px';
+    startButton.style.top = 460*(h/1080)+'px';
+    startButton.style.width = 320*(w/1920)+'px';
+    startButton.style.height = 160*(h/1080)+'px';
     if (piratesRoom==1) {
       for (i = 0; i < pirateCount; i++) {
         if (running == 1) {
@@ -289,7 +305,7 @@ function movement(event) {
   }, 3);
 }
 function pirateSpawn() {
-  pirateCount=randomNumber(score, (2*score));
+  pirateCount=randomNumber(score[0], (2*score[0]));
   for (i = 0; i < pirateCount; i++) {
     pirates[i] = document.createElement("IMG");
     pirates[i].setAttribute("src", "pirate.png");
@@ -303,6 +319,32 @@ function pirateSpawn() {
     pirates[i].style.left = piratesX[i]*(w/1920)+"px";
     pirates[i].style.top = piratesY[i]*(h/1920)+"px";
     piratesRoom=1;
+  }
+}
+function startGame() {
+  if (startScreen.style.display === 'none') {
+    var lit = 0;
+  } else {
+    startButton.style.display='none';
+    kiddo.style.display='block';
+    var startAnimation = setInterval(function(){
+      kiddoY=kiddoY-48;
+      kiddoX=kiddoX-48;
+      kiddo.style.position = "absolute";
+      kiddo.style.left=kiddoX*(w/1920)+'px';
+      kiddo.style.top=kiddoY*(h/1080)+'px';
+      kiddo.style.width = 2*(960-kiddoX)*(w/1920)+'px';
+      kiddo.style.height = 2*(540-kiddoY)*(h/1080)+'px';
+      if (kiddoX<-1000) {
+        clearInterval(startAnimation);
+        kiddo.style.display='none';
+        startScreen.style.display = 'none';
+        running=1;
+        x=880;
+        y=460;
+        pirateSpawn();
+      }
+    }, 50);
   }
 }
 function insertAfter(newNode, referenceNode) {
