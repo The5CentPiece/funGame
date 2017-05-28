@@ -17,7 +17,7 @@ body:active {
   cursor: url('sightOnClick.png') 16 16, default;
 }
 </style>
-<body onload="movement(event)" style="background-color:black;" class="noselect" draggable="false" oncontextmenu="rclick(event)" id="body1">
+<body onload="movement(event)" style="background-color:black;" class="noselect" draggable="false" oncontextmenu="rclick(event)" onclick="lclick(event)" id="body1">
 <img src="testback.png" onmouseover="mOverBack()" style="top:0px;left:0px;" draggable="false" class="noselect" id="background">
 <img src='cannonBallKid.png' style="width:160px;height:160px;" draggable="false" class="noselect" id="plyr">
 <img src="stamina0.png" draggable="false" class="noselect" id="stamina">
@@ -44,6 +44,7 @@ var img;
 var room=1;
 var running=0;
 var jumping=0;
+var rolling=0;
 var invincible=0;
 var hop = 0;
 var cooldown = 0;
@@ -57,6 +58,9 @@ var piratesOldY;
 var piratesRoom = 0;
 var score = [1];
 var animationInt = 0;
+var rollCount = 0;
+var rollX;
+var rollY;
 function rclick(event) {
   if (((((event.clientX*1920)/w)-80)>34)&&((((event.clientX*1920)/w)+80)<1888)&&((((event.clientY*1080)/h)-80)>10)&&((((event.clientY*1080)/h)+80)<1010)) {
     obstructed=0;
@@ -69,7 +73,7 @@ function rclick(event) {
     }
   }
   if (obstructed==0) {
-    if ((running==1)&&(cooldown==0)){
+    if ((running==1)&&(cooldown==0)&&(rolling==0)){
       cooldown=4;
       stamina.src='stamina4.png';
       jumping=1;
@@ -112,8 +116,51 @@ function rclick(event) {
     }
   }
 }
+function lclick(event) {
+  if ((running==1)&&(jumping==0)&&(rolling==0)) {
+    rolling=1;
+    invincible=1;
+    if (((event.clientX*1920)/w)>x){
+      plyr.src="rollingRight.gif";
+    } else {
+      plyr.src="rollingLeft.gif";
+    }
+    if ((((event.clientX*1920)/w)>(x+80))&&(((event.clientY*1080)/h)>(y+80))) {
+      rollX=2.5*((((event.clientX*1920)/w)-80)-x)/(((((event.clientY*1080)/h)-80)-y)+((((event.clientX*1920)/w)-80)-x));
+      rollY=2.5*((((event.clientY*1080)/h)-80)-y)/(((((event.clientY*1080)/h)-80)-y)+((((event.clientX*1920)/w)-80)-x));
+    }
+    if ((((event.clientX*1920)/w)<=(x+80))&&(((event.clientY*1080)/h)>(y+80))) {
+      rollX=2.5*((((event.clientX*1920)/w)-80)-x)/(((((event.clientY*1080)/h)-80)-y)-((((event.clientX*1920)/w)-80)-x));
+      rollY=2.5*((((event.clientY*1080)/h)-80)-y)/(((((event.clientY*1080)/h)-80)-y)-((((event.clientX*1920)/w)-80)-x));
+    }
+    if ((((event.clientX*1920)/w)<=(x+80))&&(((event.clientY*1080)/h)<=(y+80))) {
+      rollX=-2.5*((((event.clientX*1920)/w)-80)-x)/(((((event.clientY*1080)/h)-80)-y)+((((event.clientX*1920)/w)-80)-x));
+      rollY=-2.5*((((event.clientY*1080)/h)-80)-y)/(((((event.clientY*1080)/h)-80)-y)+((((event.clientX*1920)/w)-80)-x));
+    }
+    if ((((event.clientX*1920)/w)>(x+80))&&(((event.clientY*1080)/h)<=(y+80))) {
+      rollX=2.5*((((event.clientX*1920)/w)-80)-x)/(((((event.clientX*1920)/w)-80)-x)-((((event.clientY*1080)/h)-80)-y));
+      rollY=2.5*((((event.clientY*1080)/h)-80)-y)/(((((event.clientX*1920)/w)-80)-x)-((((event.clientY*1080)/h)-80)-y));
+    }
+    var rollingInt = setInterval(function(){
+      x=x+rollX;
+      y=y+rollY;
+      rollCount++;
+      if (rollCount == 300) {
+        rolling=0;
+        rollCount=0;
+        clearInterval(rollingInt);
+        keys[0]=0;
+        keys[1]=0;
+        keys[2]=0;
+        keys[3]=0;
+        keys[4]=0;
+        invincible=0;
+      }
+    }, 3);
+  }
+}
 function down(event) {
-  if ((running==1)&&(jumping==0)) {
+  if ((running==1)&&(jumping==0)&&(rolling==0)) {
     if ((event.keyCode==87)||(event.which==87)) {
       keys[0] = 1;
     }
@@ -132,7 +179,7 @@ function down(event) {
   }
 }
 function up(event) {
-  if ((running==1)&&(jumping==0)) {
+  if ((running==1)&&(jumping==0)&&(rolling==0)) {
     if ((event.keyCode==87)||(event.which==87)) {
       keys[0] = 0;
     }
@@ -152,7 +199,7 @@ function up(event) {
 }
 function movement(event) {
   setInterval (function(){
-  if (running==1) {
+  if ((running==1)&&(rolling==0)) {
     if ((keys[1]==1)&&(keys[3]!=1)) {
       x=x-1.5;
       if (img!="l") {
@@ -315,14 +362,21 @@ function movement(event) {
         pirates[i].style.height = 160*(h/1080)+'px';
         pirates[i].style.left = piratesX[i]*(w/1920)+'px';
         pirates[i].style.top = piratesY[i]*(h/1080)+'px';
-        if (y<piratesY[i]) {
-          insertAfter(pirates[i], plyr);
+        if (rolling==1) {
+          if ((y-50)<piratesY[i]) {
+            insertAfter(pirates[i], plyr);
+          } else {
+            document.getElementById("body1").insertBefore(pirates[i], plyr);
+          }
         } else {
-          document.getElementById("body1").insertBefore(pirates[i], plyr);
+          if (y<piratesY[i]) {
+            insertAfter(pirates[i], plyr);
+          } else {
+            document.getElementById("body1").insertBefore(pirates[i], plyr);
+          }
         }
       }
     }
-
   }, 3);
 }
 function pirateSpawn() {
@@ -345,7 +399,9 @@ function pirateSpawn() {
 function startGame() {
   if (startScreen.style.display === 'none') {
     startButton.style.display='none';
-    running=1;
+    setTimeout(function(){
+      running=1;
+    }, 1);
   } else {
     startButton.style.display='none';
     kiddo.style.display='block';
